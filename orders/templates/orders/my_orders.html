@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-5">
+  <h2>My Orders</h2>
+
+  {% if orders %}
+
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>
+          <a href="{% url 'orders:order_detail' order.id %}">
+            #{{ order.id }}
+          </a>
+        </td>
+        <td>{{ order.total_price }} TL</td>
+        <td>
+          {% if order.status == "pending" %}
+          <span class="badge bg-secondary">Beklemede</span>
+
+          {% elif order.status == "preparing" %}
+          <span class="badge bg-warning text-dark">Hazırlanıyor</span>
+
+          {% elif order.status == "shipped" %}
+          <span class="badge bg-primary">Kargoda</span>
+
+          {% elif order.status == "delivered" %}
+          <span class="badge bg-success">Teslim Edildi</span>
+          {% endif %}
+        </td>
+        <td>{{ order.created_at }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% else %}
+
+  <p>You have no orders yet.</p>
+
+  {% endif %}
+</div>
+
+{% endblock %}

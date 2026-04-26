@@ -1,0 +1,62 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container mt-4">
+  <h2>My Cart</h2>
+
+  {% if cart_items %}
+
+  <table class="table mt-3">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+     <th>Remove</th>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.product.price }} TL</td>
+        <td>
+          <a
+            href="{% url 'cart:decrease_quantity' item.id %}"
+            class="btn btn-sm btn-outline-secondary"
+            >-</a
+          >
+
+          {{ item.quantity }}
+
+          <a
+            href="{% url 'cart:increase_quantity' item.id %}"
+            class="btn btn-sm btn-outline-secondary"
+            >+</a
+          >
+        </td>
+        <td>{{ item.get_total_price }} TL</td>
+      </tr>
+
+      <td>
+    <a href="{% url 'cart:remove_item' item.id %}" class="btn btn-sm btn-danger">
+        Remove
+    </a>
+</td>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4 class="text-end">Total: {{ total_price }} TL</h4>
+  <a href="{% url 'orders:checkout' %}" class="btn btn-success">
+    Checkout
+</a>
+
+  {% else %}
+
+  <p>Your cart is empty.</p>
+
+  {% endif %}
+</div>
+
+{% endblock %}
