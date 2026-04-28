@@ -47,7 +47,41 @@
     </tbody>
   </table>
 
-  <h4 class="text-end">Total: {{ total_price }} TL</h4>
+  <div class="text-end mt-4">
+    <h4>Total: {{ total_price }} TL</h4>
+
+    {% if coupon %}
+        <p class="text-success">
+            Coupon applied: {{ coupon.code }} (%{{ coupon.discount_percent }})
+        </p>
+
+        <p class="text-danger">
+            Discount: -{{ discount_amount|floatformat:2 }} TL
+        </p>
+
+        <h4>Final Total: {{ final_total|floatformat:2 }} TL</h4>
+    {% endif %}
+</div>
+
+  <div class="mt-4">
+    <h5>Apply Coupon</h5>
+
+    <form method="post" action="{% url 'coupons:apply_coupon' %}">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-4">
+                {{ coupon_form.code }}
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-dark">
+                    Apply
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
   <a href="{% url 'orders:checkout' %}" class="btn btn-success">
     Checkout
 </a>

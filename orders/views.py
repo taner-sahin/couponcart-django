@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 
 from cart.models import CartItem
 from .models import Order, OrderItem
+from coupons.models import Coupon
+
 
 @login_required
 def checkout(request):
@@ -28,10 +30,26 @@ def checkout(request):
 
         total_price += line_total
 
-    order.total_price = total_price
+    coupon = None
+    discount_amount = 0
+    final_total = total_price
+
+    coupon_id = request.session.get("coupon_id")
+
+    if coupon_id:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id, active=True)
+            discount_amount = total_price * coupon.discount_percent / 100
+            final_total = total_price - discount_amount
+        except Coupon.DoesNotExist:
+            request.session["coupon_id"] = None
+
+    order.total_price = final_total
     order.save()
 
     cart_items.delete()
+
+    request.session["coupon_id"] = None
 
     return redirect("orders:success", order_id=order.id)
 

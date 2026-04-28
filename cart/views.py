@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-
+from coupons.forms import CouponApplyForm
 from products.models import Product
 from .models import CartItem
+from coupons.models import Coupon
 
 
 @login_required
@@ -23,6 +24,7 @@ def add_to_cart(request, product_id):
 
     return redirect("products:product_detail", slug=product.slug)
 
+
 @login_required
 def cart_detail(request):
     cart_items = CartItem.objects.filter(user=request.user)
@@ -32,9 +34,29 @@ def cart_detail(request):
     for item in cart_items:
         total_price += item.get_total_price()
 
+    coupon_form = CouponApplyForm()
+
+    coupon = None
+    discount_amount = 0
+    final_total = total_price
+
+    coupon_id = request.session.get("coupon_id")
+
+    if coupon_id:
+        try:
+            coupon = Coupon.objects.get(id=coupon_id, active=True)
+            discount_amount = total_price * coupon.discount_percent / 100
+            final_total = total_price - discount_amount
+        except Coupon.DoesNotExist:
+            request.session["coupon_id"] = None
+
     context = {
         "cart_items": cart_items,
         "total_price": total_price,
+        "coupon_form": coupon_form,
+        "coupon": coupon,
+        "discount_amount": discount_amount,
+        "final_total": final_total,
     }
 
     return render(request, "cart/detail.html", context)
