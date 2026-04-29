@@ -1,10 +1,35 @@
 {% extends "base.html" %} {% block content %}
 
+
+
 <!-- HERO -->
-<div class="text-center mb-5 p-5 bg-light rounded">
-  <h1 class="display-4 fw-bold">Smart Shopping with Coupons</h1>
-  <p class="lead">Save more with every purchase</p>
-  <a href="#" class="btn btn-dark btn-lg">Shop Now</a>
+<div class="container mt-4">
+    <div class="row align-items-center bg-light rounded-4 p-5 shadow-sm">
+
+        <div class="col-md-6">
+            <span class="badge bg-dark mb-3">CouponCart Special</span>
+
+            <h1 class="fw-bold">
+                Smart Shopping with Better Deals
+            </h1>
+
+            <p class="lead text-muted">
+                Use coupon code <strong>SAVE10</strong> and get 10% discount on your order.
+            </p>
+
+            <a href="{% url 'products:category_products' 'electronics' %}" class="btn btn-dark">
+                Shop Products
+            </a>
+        </div>
+
+        <div class="col-md-6 text-center">
+            <div class="p-5 bg-white rounded-4 border">
+                <h2 class="fw-bold text-success">SAVE10</h2>
+                <p class="mb-0">10% Discount Coupon</p>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <!-- PRODUCTS -->
