@@ -142,4 +142,4 @@ User logs in
 ## 👤 Author
 
 **Taner Sahin**  
-GitHub: https://github.com/TanerSahin19
+GitHub: https://github.com/taner-sahin
